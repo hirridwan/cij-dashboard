@@ -135,6 +135,7 @@
                         <th>No</th>
                         <th>Nama Fintech</th>
                         <th>Limit Fintech</th>
+                        <th>Sisa</th>
                         <th>Aktif</th>
                         <th>Lunas</th>
                         <th>Total Keseluruhan</th>
@@ -163,6 +164,7 @@
                             @endswitch
                             " role="progressbar" style="width: {{100-$dataItem->sisa_persen}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                             </div></td>
+                        <td>{{ $dataItem->sisa_persen }} %</td>
                         <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
