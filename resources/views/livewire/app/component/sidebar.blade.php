@@ -1,5 +1,5 @@
 <div>
-    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar sidebar-offcanvas">
         <ul class="nav">
         @forelse(menu('dashboard_user','_json') as $menu)
         <li class="nav-item">
@@ -12,5 +12,5 @@
 
         @endforelse
         </ul>
-    </nav>
+    </div>
 </div>
