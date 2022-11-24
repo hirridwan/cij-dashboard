@@ -29,6 +29,7 @@ class NominalPembiayaan extends Component
         SUM(if(datastudio_data.status_pembiayaan=4,datastudio_data.nominal_pembiayaan,0)) AS nominal_new,
         SUM(if(datastudio_data.status_pembiayaan=5,datastudio_data.nominal_pembiayaan,0)) AS nominal_on_process,
         SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0)) AS outstanding,
+        SUM(if(datastudio_data.status_pembiayaan=3,datastudio_data.nominal_bunga,0)) AS pendapatan_bunga,
         limit_kredit_fintech.nominal AS nominal_limit,
         limit_kredit_fintech.nominal-SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0)) AS sisa_limit,
         SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0))+SUM(if(datastudio_data.status_pembiayaan=3,datastudio_data.nominal_pembiayaan,0)) AS nominal_total,

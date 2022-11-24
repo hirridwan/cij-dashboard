@@ -23,6 +23,7 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="{{asset('images/p2p.png')}}" />
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.13.1/datatables.min.css"/>
+  @stack('page_specified_css')
 </head>
 @livewireStyles
 <body>

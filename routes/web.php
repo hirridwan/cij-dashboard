@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Livewire\App\Dashboard\P2pLending;
 use App\Http\Livewire\App\Dashboard\Deposito;
 use App\Http\Livewire\App\Dashboard\NominatifPembiayaan;
+use App\Http\Livewire\App\Dashboard\Transaksi\TransaksiAngsuran;
+use App\Http\Livewire\App\Dashboard\P2p\Analisa\QuickAnalysisIndex;
+use App\Http\Livewire\App\Dashboard\P2p\Analisa\QuickAnalysisDetail;
 use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Auth\Logout;
 
@@ -36,6 +39,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/dashboard/deposito',Deposito::class)->name('dashboard.deposito');
     Route::get('/dashboard/nominatif-pembiayaan',NominatifPembiayaan::class)->name('dashboard.nominatif-pembiayaan');
     Route::get('/logout',Logout::class)->name('dashboard.logout');
+    Route::get('/transaksi/angsuran',TransaksiAngsuran::class)->name('transaksi.angsuran');
+    Route::get('/analisa/quick-analysis',QuickAnalysisIndex::class)->name('analisa.quick-analysis');
+    Route::get('/analisa/quick-analysis-detail/{id}',QuickAnalysisDetail::class)->name('analisa.quick-analysis.detail');
 });
 
 
