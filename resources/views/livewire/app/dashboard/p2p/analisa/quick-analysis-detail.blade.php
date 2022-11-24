@@ -198,7 +198,7 @@
                 <table>
                     <tr>
                         <th colspan="2">C. Payor Analisis</th>
-                        <th class="text-center @if($analysis->pefindo_status='High Risk Pefindo') bg-danger text-white @else bg-success @endif">{{$analysis->pefindo_status}}</th>
+                        <th class="text-center @if($analysis->pefindo_status=='HIGH RISK PEFINDO') bg-danger text-white @else bg-success text-white @endif">{{$analysis->pefindo_status}}</th>
                     </tr>
                     <tr>
                         <td width="300">Total Payor</td>
