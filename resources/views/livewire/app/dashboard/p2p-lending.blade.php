@@ -44,8 +44,6 @@
 
                 @livewire('app.dashboard.p2p.component.lewat-jatuh-tempo')
 
-                @livewire('app.dashboard.p2p.component.limit-fintech')
-
               </div>
             </div>
           </div>

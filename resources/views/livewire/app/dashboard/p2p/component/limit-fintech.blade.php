@@ -1,6 +1,6 @@
 
                 
-<div class="row flex-grow d-none">
+<div class="row flex-grow">
     <div class="col-12 grid-margin stretch-card">
         <div class="card card-rounded">
             <div class="card-body">
