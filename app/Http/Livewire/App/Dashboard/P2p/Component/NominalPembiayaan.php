@@ -27,12 +27,15 @@ class NominalPembiayaan extends Component
         SUM(if(datastudio_data.status_pembiayaan=3,datastudio_data.nominal_pembiayaan,0)) AS nominal_lunas,
         SUM(if(datastudio_data.status_pembiayaan=4,datastudio_data.nominal_pembiayaan,0)) AS nominal_new,
         SUM(if(datastudio_data.status_pembiayaan=5,datastudio_data.nominal_pembiayaan,0)) AS nominal_on_process,
+        SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0)) AS outstanding,
+        limit_kredit_fintech.nominal AS nominal_limit,
         SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0))+SUM(if(datastudio_data.status_pembiayaan=3,datastudio_data.nominal_pembiayaan,0)) AS nominal_total,
         (SELECT limit_kredit_fintech.nominal WHERE limit_kredit_fintech.fintech_id=datastudio_data.fintech_id)-SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0)) AS sisa_limit,
         ROUND(((SELECT limit_kredit_fintech.nominal WHERE limit_kredit_fintech.fintech_id=datastudio_data.fintech_id)-SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0)))/(SELECT limit_kredit_fintech.nominal WHERE limit_kredit_fintech.fintech_id=datastudio_data.fintech_id)*100,2) AS persen_limit,
         100-round(SUM(if(datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0))/limit_kredit_fintech.nominal*100,2) AS sisa_persen'))
         ->groupBy('nama_fintech')
         ->orderByDesc('nominal_aktif')
+        ->orderByDesc('outstanding')
         ->get();
 
         
