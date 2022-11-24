@@ -149,7 +149,21 @@
                         <th class="py-2">
                             <img class="img"style="object-fit: scale-down; width:100px; height:50px;" src="{{asset('storage/'.$dataItem->logo)}}" alt="profile">
                         </th>
-                        <td>{{ $dataItem->persen_limit }} %</td>
+                        <td>
+                            <div class="progress" style="width:200px;">
+                            <div class="progress-bar 
+                            @switch(100-$dataItem->sisa_persen)
+                                @case(100-$dataItem->sisa_persen>50 && 100-$dataItem->sisa_persen<80)
+                                bg-warning
+                                @break
+                                @case(100-$dataItem->sisa_persen>80)
+                                bg-danger
+                                @break
+                                @default
+                                bg-success
+                            @endswitch
+                            " role="progressbar" style="width: {{100-$dataItem->sisa_persen}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div></td>
                         <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
