@@ -123,18 +123,17 @@
                 <div class="d-sm-flex justify-content-between align-items-start">
                 <div>
                     <h4 class="card-title card-title-dash">Status Pembiayaan / Nominal Pembiayaan</h4>
-                    {{-- <p class="card-subtitle card-subtitle-dash">Status Pembiayaan / Nominal Pembiayaan</p> --}}
+                    <p class="card-subtitle card-subtitle-dash">Status Pembiayaan / Nominal Pembiayaan</p>
                 </div>
                 <div>
                 </div>
                 </div>
                 <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead>
+                    <thead style="background-color: #dedede;">
                     <tr>
                         <th>No</th>
                         <th>Nama Fintech</th>
-                        
                         <th>Aktif</th>
                         <th>Lunas</th>
                         <th>Total Disburse</th>
@@ -151,10 +150,9 @@
                         <th class="py-2">
                             <img class="img"style="object-fit: scale-down; width:100px; height:50px;" src="{{asset('storage/'.$dataItem->logo)}}" alt="profile">
                         </th>
-                        
-                        <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
-                        <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
-                        <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
+                        <td align="right">{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
+                        <td align="right">{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
+                        <td align="right">{{number_format($dataItem->nominal_total,0,',','.')}}</td>
                         <td>
                             {{number_format($dataItem->outstanding/1000000000,2,',','.')."M / ".number_format($dataItem->nominal_limit/1000000000,2,',','.')." M"}}
                             <div class="progress mt-1" style="width:200px;">
@@ -173,7 +171,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{number_format($dataItem->sisa_limit/1000000000,2,',','.')." M (".strval($dataItem->sisa_persen).")"}} % Tersisa</td>
+                        <td>{{number_format($dataItem->sisa_limit/1000000000,2,',','.')." M (".strval($dataItem->sisa_persen)." %)"}}</td>
                     </tr>
                     @endforeach
                     </tbody>
