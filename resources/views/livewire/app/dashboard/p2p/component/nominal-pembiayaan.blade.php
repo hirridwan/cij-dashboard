@@ -137,15 +137,10 @@
                         
                         <th>Aktif</th>
                         <th>Lunas</th>
-<<<<<<< HEAD
-                        <th>Total Keseluruhan</th>
-                        <th>Limit Fintech</th>
-=======
                         <th>Total Disburse</th>
                         <th>Limit Fintech</th>
                         <th>Sisa Limit</th>
                         
->>>>>>> 7d67342cf1d55f17804a8e0942eaa66c935de0ab
                     </tr>
                     </thead>
                     <tbody>
