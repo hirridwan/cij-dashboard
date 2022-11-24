@@ -1,5 +1,4 @@
-
-<div class="content-wrapper" style="font-size:9pt;">
+<div>
     <div class="row flex-grow">
         <div class="col-md-12 grid-margin">
             <div class="home-tab mb-4">

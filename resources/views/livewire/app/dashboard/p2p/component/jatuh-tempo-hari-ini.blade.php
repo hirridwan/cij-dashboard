@@ -43,7 +43,7 @@
                                             @endforelse
                                         </tbody>
                                         <tfoot>
-                                            <tr style="font-weight: bold;">
+                                            <tr class="fw-bold">
                                                 <td colspan="4" align="center">Total</td>
                                                 <td>{{number_format($jatuhTempoHariIni->sum('nominal_pembiayaan'),2,',','.')}}</td>
                                             </tr>
