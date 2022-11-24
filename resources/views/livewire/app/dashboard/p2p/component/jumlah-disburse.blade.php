@@ -9,8 +9,8 @@
             <div class="card-body">
                 <div class="d-sm-flex justify-content-between align-items-start">
                 <div>
-                    <h4 class="card-title card-title-dash">Performa P2P Lending</h4>
-                    <p class="card-subtitle card-subtitle-dash">Data Performa P2P Lending</p>
+                    <h4 class="card-title card-title-dash">Performa P2P Lending 6 Bulan Terakhir</h4>
+                    <p class="card-subtitle card-subtitle-dash">(Dalam Miliar Rupiah)</p>
                 </div>
                 <div id="performance-line-legend"></div>
                 </div>
