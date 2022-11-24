@@ -160,14 +160,14 @@
                     </tr>
                     @foreach ($score_rac_detail as $item)
                     <tr>
-                        <td width="500">{{$item->parameter}}</td>
+                        <td width="500">{{ucfirst(str_replace('_',' ',$item->parameter))}}</td>
                         <td width="400">{{$item->value}}</td>
                         <td>{{$item->score}}</td>
                     </tr>                        
                     @endforeach
                     <tr>
                         <td colspan="2">Total Score</td>
-                        <td>{{$score_rac[0]->score}}</td>
+                        <td><b>{{$score_rac[0]->score}}</b></td>
                     </tr>
                 </table>
             </div>
@@ -181,14 +181,14 @@
                     </tr>
                     @foreach ($score_fitur_pendanaan_detail as $item)
                         <tr>
-                            <td width="500">{{$item->parameter}}</td>
+                            <td width="500">{{ucfirst(str_replace('_',' ',$item->parameter))}}</td>
                             <td width="400">{{$item->value}}</td>
                             <td>{{$item->score}}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td colspan="2">Total Score</td>
-                        <td>{{$score_fitur_pendanaan[0]->score}}</td>
+                        <td><b>{{$score_fitur_pendanaan[0]->score}}</b></td>
                     </tr>
                 </table>
             </div>

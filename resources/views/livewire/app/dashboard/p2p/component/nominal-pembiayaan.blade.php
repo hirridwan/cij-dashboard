@@ -35,7 +35,7 @@
                             <div class="col-sm-12">
                                 <h4 class="card-title card-title-dash my-2 text-muted">Pendapatan Bunga</h4>
                                 <!-- <p class="status-summary-ight-white mb-1">Closed Value</p> -->
-                                <h2 class="fw-bold">{{number_format($data[0]->pendapatan_bunga/1000000000,2,',','.')}} M</h2>
+                                <h2 class="fw-bold">{{number_format($pendapatan_bunga[0]->pendapatan_bunga/1000000000,2,',','.')}} M</h2>
                             </div>
                         </div>
                         <div class="row">

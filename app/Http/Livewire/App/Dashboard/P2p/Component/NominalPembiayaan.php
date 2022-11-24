@@ -41,6 +41,7 @@ class NominalPembiayaan extends Component
         ->orderByDesc('outstanding')
         ->get();
 
+        $this->pendapatan_bunga = DB::select('select getPendapatanBunga() as pendapatan_bunga');
         
         $this->dataNominal2= DB::table('datastudio_data')->select(DB::raw('
         sum(if(EXTRACT(YEAR_MONTH FROM datastudio_data.jatuh_tempo)=extract(year_month from date(NOW())) && datastudio_data.status_pembiayaan=1,datastudio_data.nominal_pembiayaan,0)) AS nominal_jatuh_tempo_bulan_ini,
