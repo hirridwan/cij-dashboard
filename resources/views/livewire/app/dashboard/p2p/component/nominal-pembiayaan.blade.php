@@ -123,22 +123,22 @@
                 <div class="d-sm-flex justify-content-between align-items-start">
                 <div>
                     <h4 class="card-title card-title-dash">Status Pembiayaan / Nominal Pembiayaan</h4>
-                    {{-- <p class="card-subtitle card-subtitle-dash">Status Pembiayaan / Nominal Pembiayaan</p> --}}
+                    <p class="card-subtitle card-subtitle-dash">Status Pembiayaan / Nominal Pembiayaan</p>
                 </div>
                 <div>
                 </div>
                 </div>
                 <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead>
+                    <thead style="background-color: #dedede;">
                     <tr>
                         <th>No</th>
                         <th>Nama Fintech</th>
-                        <th>Limit Fintech</th>
-                        <th>Sisa</th>
                         <th>Aktif</th>
                         <th>Lunas</th>
-                        <th>Total Keseluruhan</th>
+                        <th>Total Disburse</th>
+                        <th>Limit Fintech</th>
+                        <th>Sisa Limit</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -149,25 +149,28 @@
                         <th class="py-2">
                             <img class="img"style="object-fit: scale-down; width:100px; height:50px;" src="{{asset('storage/'.$dataItem->logo)}}" alt="profile">
                         </th>
+                        <td align="right">{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
+                        <td align="right">{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
+                        <td align="right">{{number_format($dataItem->nominal_total,0,',','.')}}</td>
                         <td>
-                            <div class="progress" style="width:200px;">
-                            <div class="progress-bar 
-                            @switch(100-$dataItem->sisa_persen)
-                                @case(100-$dataItem->sisa_persen>50 && 100-$dataItem->sisa_persen<80)
-                                bg-warning
-                                @break
-                                @case(100-$dataItem->sisa_persen>80)
-                                bg-danger
-                                @break
-                                @default
-                                bg-success
-                            @endswitch
-                            " role="progressbar" style="width: {{100-$dataItem->sisa_persen}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div></td>
-                        <td>{{ $dataItem->sisa_persen }} %</td>
-                        <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
-                        <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
-                        <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
+                            {{number_format($dataItem->outstanding/1000000000,2,',','.')."M / ".number_format($dataItem->nominal_limit/1000000000,2,',','.')." M"}}
+                            <div class="progress mt-1" style="width:200px;">
+                                <div class="progress-bar 
+                                @switch(100-$dataItem->sisa_persen)
+                                    @case(100-$dataItem->sisa_persen>50 && 100-$dataItem->sisa_persen<80)
+                                    bg-warning
+                                    @break
+                                    @case(100-$dataItem->sisa_persen>80)
+                                    bg-danger
+                                    @break
+                                    @default
+                                    bg-success
+                                @endswitch
+                                " role="progressbar" style="width: {{100-$dataItem->sisa_persen}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{number_format($dataItem->sisa_limit/1000000000,2,',','.')." M (".strval($dataItem->sisa_persen).")"}}%</td>
                     </tr>
                     @endforeach
                     </tbody>
