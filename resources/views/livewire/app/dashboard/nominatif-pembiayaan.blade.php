@@ -63,8 +63,8 @@
                                 <td>{{$item->jangka_waktu}}</td>
                                 <td>{{$item->STATUS}}</td>
                                 <td>{{$item->bunga}}</td>
-                                <td>{{number_format($item->nominal_pembiayaan,2,',','.')}}</td>
-                                <td>{{$item->no_factsheet}}</td>
+                                <td align="right">{{number_format($item->nominal_pembiayaan,2,',','.')}}</td>
+                                <td align="right">{{$item->no_factsheet}}</td>
                                 <td>{{$item->link_dokumen}}</td>
                             </tr>
                             @endforeach
