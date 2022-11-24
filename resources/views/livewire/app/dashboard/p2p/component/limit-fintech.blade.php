@@ -15,7 +15,7 @@
                     @foreach($limitFintech as $item)
                     <div class="wrapper d-flex align-items-center justify-content-between py-2 border-bottom">
                         <div class="d-flex">
-                        <img class="img" width="100" height="50" style="object-fit: scale-down" src="{{asset('storage/'.$item->logo)}}" alt="profile">
+                            <img class="img" width="100" height="50" style="object-fit: scale-down" src="{{asset('storage/'.$item->logo)}}" alt="profile">
                         <div class="wrapper ms-3 ">
                             <p class="ms-1 mb-1 fw-bold">{{$item->name}}</p>
                             <small class="text-muted mb-0">{{number_format($item->outstanding/1000000000,2,',','.')."M / ".number_format($item->nominal_limit/1000000000,2,',','.')." M"}}</small>

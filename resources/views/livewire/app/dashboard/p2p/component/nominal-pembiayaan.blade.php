@@ -144,7 +144,10 @@
                     @foreach($data as $dataItem)
                     <tr>
                         <td>{{$loop->index+1}}</td>
-                        <td>{{$dataItem->nama_fintech}}</td>
+                        {{-- <td>{{$dataItem->nama_fintech}}</td> --}}
+                        <th class="py-2">
+                            <img class="img"style="object-fit: scale-down; width:100px; height:50px;" src="{{asset('storage/'.$dataItem->logo)}}" alt="profile">
+                        </th>
                         <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
