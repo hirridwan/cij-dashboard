@@ -22,7 +22,7 @@
                                                 <th>Jatuh Tempo</th>
                                                 <th>Nama Fintech</th>
                                                 <th>Nama Borrower</th>
-                                                <th>Nominal Pembiayaan</th>
+                                                <th style="text-align:center;">Nominal Pembiayaan</th>
                                                 {{-- <th>Tunggakan Hari</th> --}}
                                             </tr>
                                         </thead>
