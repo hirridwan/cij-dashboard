@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover">
-                                        <thead>
+                                        <thead style="background-color: #dedede;">
                                             <tr>
                                                 <th>No</th>
                                                 <th>Jatuh Tempo</th>
@@ -33,7 +33,7 @@
                                                 <td>{{$item->jatuh_tempo}}</td>
                                                 <td>{{$item->nama_fintech}}</td>
                                                 <td>{{$item->nama_borrower}}</td>
-                                                <td>{{number_format($item->nominal_pembiayaan,2,',','.')}}</td>
+                                                <td align="right">{{number_format($item->nominal_pembiayaan,2,',','.')}}</td>
                                                 {{-- <td>{{$item->tunggakan_hari}}</td> --}}
                                             </tr>
                                             @empty
@@ -45,7 +45,7 @@
                                         <tfoot>
                                             <tr style="font-weight: bold;">
                                                 <td colspan="4" align="center">Total</td>
-                                                <td>{{number_format($jatuhTempoHariIni->sum('nominal_pembiayaan'),2,',','.')}}</td>
+                                                <td align="right">{{number_format($jatuhTempoHariIni->sum('nominal_pembiayaan'),2,',','.')}}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
