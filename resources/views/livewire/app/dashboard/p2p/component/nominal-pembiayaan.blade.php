@@ -171,7 +171,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{number_format($dataItem->sisa_limit/1000000000,2,',','.')." M (".strval($dataItem->sisa_persen).")"}}%</td>
+                        <td>{{number_format($dataItem->sisa_limit/1000000000,2,',','.')." M (".strval($dataItem->sisa_persen)." %)"}}</td>
                     </tr>
                     @endforeach
                     </tbody>
