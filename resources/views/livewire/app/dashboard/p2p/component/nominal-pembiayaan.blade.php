@@ -134,10 +134,10 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Fintech</th>
+                        <th>Limit Fintech</th>
                         <th>Aktif</th>
                         <th>Lunas</th>
                         <th>Total Keseluruhan</th>
-                        <th>Limit Fintech</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -166,7 +166,6 @@
                         <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
-                        <td>{{ 1 }}</td>
                     </tr>
                     @endforeach
                     </tbody>
