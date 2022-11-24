@@ -134,11 +134,10 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Fintech</th>
-                        <th>Limit Fintech</th>
                         <th>Aktif</th>
                         <th>Lunas</th>
                         <th>Total Keseluruhan</th>
-                        
+                        <th>Limit Fintech</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -149,10 +148,10 @@
                         <th class="py-2">
                             <img class="img"style="object-fit: scale-down; width:100px; height:50px;" src="{{asset('storage/'.$dataItem->logo)}}" alt="profile">
                         </th>
-                        <td>{{ $dataItem->persen_limit }} %</td>
                         <td>{{number_format($dataItem->nominal_aktif,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_lunas,0,',','.')}}</td>
                         <td>{{number_format($dataItem->nominal_total,0,',','.')}}</td>
+                        <td>{{ 1 }}</td>
                     </tr>
                     @endforeach
                     </tbody>
