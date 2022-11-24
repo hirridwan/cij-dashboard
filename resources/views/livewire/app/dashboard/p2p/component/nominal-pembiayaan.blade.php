@@ -134,11 +134,12 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Fintech</th>
-                        <th style="text-align:center;">Aktif</th>
-                        <th style="text-align:center;">Lunas</th>
-                        <th style="text-align:center;">Total Disburse</th>
+                        <th>Aktif</th>
+                        <th>Lunas</th>
+                        <th>Total Disburse</th>
                         <th>Limit Fintech</th>
                         <th>Sisa Limit</th>
+                        
                     </tr>
                     </thead>
                     <tbody>
