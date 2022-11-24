@@ -151,7 +151,8 @@
                             <img class="img"style="object-fit: scale-down; width:100px; height:50px;" src="{{asset('storage/'.$dataItem->logo)}}" alt="profile">
                         </th>
                         <td>
-                            <div class="progress" style="width:200px;">
+                            {{number_format($dataItem->outstanding/1000000000,2,',','.')."M / ".number_format($dataItem->nominal_limit/1000000000,2,',','.')." M"}}
+                            <div class="progress mt-1" style="width:200px;">
                             <div class="progress-bar 
                             @switch(100-$dataItem->sisa_persen)
                                 @case(100-$dataItem->sisa_persen>50 && 100-$dataItem->sisa_persen<80)
