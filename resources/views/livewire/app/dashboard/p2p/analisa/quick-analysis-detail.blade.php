@@ -149,9 +149,10 @@
                         <td>{{$analysis->nama_fintech}}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: bold; background-color: #fff;">Nama Borrower</td>
-                        <td style="background-color: #fff;">:</td>
-                        <td style="background-color: #fff;">{{$analysis->nama_borrower}}</td>
+                        <td>Nama Borrower</td>
+                        <td>:</td>
+                        <td>{{$analysis->nama_borrower}}</td>
+                        <td rowspan="2">{{number_format($analysis->fasilitas_aktif_fintech,2,',','.')}}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold;">Plafon Penawaran</td>
