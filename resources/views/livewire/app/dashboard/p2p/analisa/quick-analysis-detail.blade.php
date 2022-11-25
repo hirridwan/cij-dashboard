@@ -148,7 +148,7 @@
                         <td>:</td>
                         <td>{{$analysis->nama_fintech}}</td>
                     </tr>
-                    <tr>
+                    <tr style="background-color: #fff">
                         <td style="font-weight: bold;">Nama Borrower</td>
                         <td>:</td>
                         <td>{{$analysis->nama_borrower}}</td>

@@ -8,7 +8,7 @@
       </div>
       <div>
         <a class="navbar-brand brand-logo" href="index.html">
-          <img src="{{asset('images/p2p.png')}}" alt="logo" />
+          <img src="{{asset('images/p2p.png')}}" alt="logo"/>
         </a>
         <a class="navbar-brand brand-logo-mini" href="index.html">
           <img src="{{asset('images/p2p.png')}}" alt="logo" />
