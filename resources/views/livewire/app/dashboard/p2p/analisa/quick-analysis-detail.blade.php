@@ -125,7 +125,7 @@
                         <td>Nama Borrower</td>
                         <td>:</td>
                         <td>{{$analysis->nama_borrower}}</td>
-                        <td rowspan="2">{{number_format($analysis->fasilitas_aktif_fintech,2,',','.')}}</td>
+                        <td rowspan="2">{{number_format($analysis->fasilitas_aktif_fintech,0,',','.')}}</td>
                     </tr>
                     <tr>
                         <td>Plafon Penawaran</td>
