@@ -34,43 +34,42 @@
                 background: white;
                 box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
                 position: relative;
+                }
+
+                .header {
+                    text-align: center;
+                }
+
+                /* table styling */
+                table {
+                    margin: 18px 0;
+                    width: 100%;
+                    padding: 8px;
+                    border-collapse: collapse;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #f8f6ff;
+                }
+
+                th {
+                    background-color: #6c7ae0;
+                    height: 50px;
+                    width: 200px;
+                    color: white;
+                }
+
+                tr, td, th {
+                    text-align: left;
+                    margin: 8px;
+                    padding: 8px;
+                }  
+
+                h2 {
+                    font-weight: bold;
+                }
             }
-
-            .header {
-                text-align: center;
-            }
-
-            /* table styling */
-            table {
-                margin: 18px 0;
-                width: 100%;
-                padding: 8px;
-                border-collapse: collapse;
-            }
-
-            tr:nth-child(even) {
-                background-color: #f8f6ff;
-            }
-
-            th {
-                background-color: #6c7ae0;
-                height: 50px;
-                width: 200px;
-                color: white;
-            }
-
-            tr, td, th {
-                text-align: left;
-                margin: 8px;
-                padding: 8px;
-            }  
-
-            h2 {
-                font-weight: bold;
-            }
-
-
-            }
+            
             @media print {
                 .page {
                     font-size: 12pt;
@@ -107,6 +106,7 @@
             }
     </style>
     @endpush
+    
     <div class="header">
         <div class="row">
             <div class="col">
@@ -258,4 +258,6 @@
             </div>
         </div>
     </div>
+
+
 </div>
