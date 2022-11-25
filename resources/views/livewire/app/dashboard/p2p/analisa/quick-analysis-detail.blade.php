@@ -149,15 +149,14 @@
                         <td>{{$analysis->nama_fintech}}</td>
                     </tr>
                     <tr>
-                        <td>Nama Borrower</td>
+                        <td style="font-weight: bold;">Nama Borrower</td>
                         <td>:</td>
                         <td>{{$analysis->nama_borrower}}</td>
-                        <td rowspan="2">{{number_format($analysis->fasilitas_aktif_fintech,2,',','.')}}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: bold;">Plafon Penawaran</td>
                         <td>:</td>
-                        <td>{{number_format($analysis->plafon_penawaran,2,',','.')}}</td>
+                        <td>{{number_format($analysis->plafon_penawaran,0,',','.')}}</td>
                     </tr>
                 </table>
             </div>
@@ -167,7 +166,7 @@
                         <th>Fasilitas Aktif Fintech</th>
                     </tr>
                     <td>
-                        {{number_format($analysis->fasilitas_aktif_fintech,2,',','.')}}
+                        {{number_format($analysis->fasilitas_aktif_fintech,0,',','.')}}
                     </td>
                 </table>
             </div>
