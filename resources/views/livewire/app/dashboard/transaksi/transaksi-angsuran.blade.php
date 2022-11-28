@@ -28,16 +28,10 @@
                                     <input type="text" class="form-control">
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
+                            <div class="col-sm-6">
                                 <div class="form-group my-0">
-                                    <input type="text" readonly class="form-control-plaintext" value="Nama Borrower">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group my-0">
-                                    <input type="text" readonly class="form-control-plaintext" value="Nomor Factsheet">
+                                    <label for="">Nomor Factsheet</label>
+                                    <input type="text" readonly class="form-control" value="Nomor Factsheet">
                                 </div>
                             </div>
                         </div>
