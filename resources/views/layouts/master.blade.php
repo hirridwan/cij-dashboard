@@ -23,8 +23,10 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="{{asset('images/p2p.png')}}" />
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.13.1/datatables.min.css"/>
-  <script defer src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="{{asset('custom.css')}}">
   @stack('page_specified_css')
+  <script defer src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js"></script>
 </head>
 @livewireStyles
 <body>
@@ -75,6 +77,7 @@
   <script src="{{asset('js/Chart.roundedBarCharts.js')}}"></script>
   <!-- End custom js for this page-->
   <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.13.1/datatables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   @stack('page_specified_js')
 
 </body>

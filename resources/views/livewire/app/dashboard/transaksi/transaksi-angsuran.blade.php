@@ -1,4 +1,6 @@
 <div class="container w-75 mt-4">
+    @push('page_specified_css')
+    @endpush
     <div class="row">
         <div class="col">
             <div class="card">
@@ -11,8 +13,13 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Nama Fintech</label>
-                                    <select class="form-control">
-                                        <option value="1">-- Nama Fintech --</option>
+                                    <select class="form-control select2" style="padding: 0px;!important;">
+                                        <option>-- Nama Fintech --</option>
+                                        @forelse ($finteches as $item)
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                        @empty
+                                            <option>Tidak ada pilihan di database!</option>
+                                        @endforelse
                                     </select>
                                 </div>
                             </div>
@@ -40,8 +47,13 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Kode Transaksi</label>
-                                    <select class="form-control">
+                                    <select class="form-control select2">
                                         <option value="">-- Pilih Kode Trx --</option>
+                                        @forelse ($kode_transaksi as $item)
+                                            <option value="{{$item->kode}}">{{$item->nama}}</option>
+                                        @empty
+                                            <option value="">Tidak Ada Kode Transaksi di database!</option>
+                                        @endforelse
                                     </select>
                                 </div>
                             </div>
@@ -90,4 +102,11 @@
             </div>
         </div>
     </div>
+    @push('page_specified_js')
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2();
+            });
+        </script>
+    @endpush
 </div>
