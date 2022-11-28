@@ -1,3 +1,13 @@
+<div class="row w-75 text-right" style="margin: auto;">
+    <div class="col">
+        <div class="btn-wrapper">
+            <button onclick="printPage()" class="btn btn-primary">
+                Cetak PDF
+            </button>
+        </div>
+    </div>
+</div>
+
 <div class="page">
     @push('page_specified_css')
     <style>
@@ -71,42 +81,36 @@
             }
             
             @media print {
-                .container {
+                .page {
                     font-size: 12pt;
                     width: 210mm;
                     margin: auto;
                 }
                 .header {
                 text-align: center;
-            }
-
-            /* table styling */
-            table {
-                margin: 18px 0;
-                width: 100%;
-                padding: 8px;
-                border-collapse: collapse;
-            }
-
-            tr:nth-child(even) {
-                background-color: #eaeaea;
-            }
-
-            th {
-                background-color: #dedede;
-            }
-
-            tr, td, th {
-                text-align: left;
-                margin: 12px;
-                padding: 12px;
-                color: gray
-            }  
-
+                }
+                /* table styling */
+                table {
+                    margin: 18px 0;
+                    width: 100%;
+                    padding: 8px;
+                    border-collapse: collapse;
+                }
+                tr:nth-child(even) {
+                    background-color: #eaeaea;
+                }
+                th {
+                    background-color: #dedede;
+                }
+                tr, td, th {
+                    text-align: left;
+                    margin: 12px;
+                    padding: 12px;
+                    color: gray
+                }  
             }
     </style>
     @endpush
-
     <div class="container">
         <div class="header">
             <div class="row">
@@ -277,17 +281,4 @@
             </div>
         </div>
     </div>
-
 </div>
-
-<div class="row w-75 text-right" style="margin: auto;">
-    <div class="col">
-        <div class="btn-group">
-            <div class="btn btn-primary">
-                Cetak PDF
-            </div>
-        </div>
-    </div>
-</div>
-
-
