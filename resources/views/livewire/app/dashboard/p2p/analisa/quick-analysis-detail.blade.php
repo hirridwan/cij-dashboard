@@ -174,6 +174,21 @@
                     </table>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table>
+                    <tr>
+                        <th>% Komitmen Pemberian Kredit</th>
+                        <th>Nominal Fasilitas Aktif</th>
+                        <th>NOA Fasilitas Aktif</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center">{{$analysis->komitmen_pemberian_kredit}}%</td>
+                        <td align="right">{{number_format($analysis->nominal_fasilitas_aktif,2,',','.')}}</td>
+                        <td class="text-center">{{$analysis->noa_fasilitas_aktif}}</td>
+                    </tr>
+                </table>
             <div class="row">
                 <div class="col">
                     <table>
