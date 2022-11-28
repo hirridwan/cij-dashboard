@@ -182,9 +182,9 @@
                         <th>NOA Fasilitas Aktif</th>
                     </tr>
                     <tr>
-                        <td>{{$analysis->komitmen_pemberian_kredit}}%</td>
-                        <td>{{number_format($analysis->nominal_fasilitas_aktif,2,',','.')}}</td>
-                        <td>{{number_format($analysis->noa_fasilitas_aktif,2,',','.')}}</td>
+                        <td class="text-center">{{$analysis->komitmen_pemberian_kredit}}%</td>
+                        <td align="right">{{number_format($analysis->nominal_fasilitas_aktif,2,',','.')}}</td>
+                        <td class="text-center">{{$analysis->noa_fasilitas_aktif}}</td>
                     </tr>
                 </table>
             </div>

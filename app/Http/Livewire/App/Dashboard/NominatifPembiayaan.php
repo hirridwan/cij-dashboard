@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 use App\DatastudioData;
+use Yajra\DataTables\Facades\DataTables;
 
 class NominatifPembiayaan extends Component
 {
@@ -22,6 +23,8 @@ class NominatifPembiayaan extends Component
         $this->paginate = 25;
         $this->data = DB::select('call getPembiayaanByTglAndStatus(?,?,?)',array('2021-11-01',date('Y-m-d'),$this->filter));
         $this->statusPembiayaan = DB::table('status_pembiayaan')->get();
+        $dataTables=Datatables::of($this->data);
+        $this->dataTablesData=json_encode($dataTables->toArray(),true);
     }
     public function updatingFilter()
     {

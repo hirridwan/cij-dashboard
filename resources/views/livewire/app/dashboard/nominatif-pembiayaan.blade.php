@@ -49,7 +49,7 @@
                                 <th>Dokumen</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            {{-- <tbody>
                             @foreach ($data as $item)
                             <tr>
                                 <td>{{$loop->index+1}}</td>
@@ -68,7 +68,7 @@
                                 <td>{{$item->link_dokumen}}</td>
                             </tr>
                             @endforeach
-                            </tbody>
+                            </tbody> --}}
                         </table>
                     </div>
                 </div>
@@ -78,6 +78,8 @@
     @push('page_specified_js')
     <script>
         $(document).ready( function () {
+            
+            console.log(@this.dataTablesData.data)
             $('#table-pembiayaan').DataTable();
         });
     </script>

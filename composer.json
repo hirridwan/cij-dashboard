@@ -11,7 +11,11 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",
-        "tcg/voyager": "^1.6"
+        "maatwebsite/excel": "^3.1",
+        "mediconesystems/livewire-datatables": "^0.10.0",
+        "psr/simple-cache": "1.0",
+        "tcg/voyager": "^1.6",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DataNominatifPembiayaan;
 use App\Http\Livewire\App\Dashboard\P2pLending;
 use App\Http\Livewire\App\Dashboard\Deposito;
 use App\Http\Livewire\App\Dashboard\NominatifPembiayaan;
@@ -38,6 +39,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/dashboard/p2p-lending',P2pLending::class)->name('dashboard.p2p-lending');
     Route::get('/dashboard/deposito',Deposito::class)->name('dashboard.deposito');
     Route::get('/dashboard/nominatif-pembiayaan',NominatifPembiayaan::class)->name('dashboard.nominatif-pembiayaan');
+    Route::get('/dashboard/nominatif-pembiayaan/data/{status}',[DataNominatifPembiayaan::class,'data'])->name('dashboard.nominatif-pembiayaan.data');
     Route::get('/logout',Logout::class)->name('dashboard.logout');
     Route::get('/transaksi/angsuran',TransaksiAngsuran::class)->name('transaksi.angsuran');
     Route::get('/analisa/quick-analysis',QuickAnalysisIndex::class)->name('analisa.quick-analysis');
