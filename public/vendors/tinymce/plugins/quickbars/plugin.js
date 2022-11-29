@@ -4,9 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.3.2 (2020-06-10)
  */
-(function () {
+(function (domGlobals) {
     'use strict';
 
     var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
@@ -41,10 +41,11 @@
     };
     var insertTableHtml = function (editor, cols, rows) {
       editor.undoManager.transact(function () {
+        var tableElm, cellElm;
         editor.insertContent(createTableHtml(cols, rows));
-        var tableElm = getInsertedElement(editor);
+        tableElm = getInsertedElement(editor);
         tableElm.removeAttribute('data-mce-id');
-        var cellElm = editor.dom.select('td,th', tableElm);
+        cellElm = editor.dom.select('td,th', tableElm);
         editor.selection.setCursorLocation(cellElm[0], 0);
       });
     };
@@ -52,8 +53,9 @@
       editor.plugins.table ? editor.plugins.table.insertTable(cols, rows) : insertTableHtml(editor, cols, rows);
     };
     var insertBlob = function (editor, base64, blob) {
-      var blobCache = editor.editorUpload.blobCache;
-      var blobInfo = blobCache.create(generate('mceu'), blob, base64);
+      var blobCache, blobInfo;
+      blobCache = editor.editorUpload.blobCache;
+      blobInfo = blobCache.create(generate('mceu'), blob, base64);
       blobCache.add(blobInfo);
       editor.insertContent(editor.dom.createHTML('img', { src: blobInfo.blobUri() }));
     };
@@ -62,7 +64,7 @@
 
     var blobToBase64 = function (blob) {
       return new global$1(function (resolve) {
-        var reader = new FileReader();
+        var reader = new domGlobals.FileReader();
         reader.onloadend = function () {
           resolve(reader.result.split(',')[1]);
         };
@@ -76,14 +78,14 @@
 
     var pickFile = function (editor) {
       return new global$1(function (resolve) {
-        var fileInput = document.createElement('input');
+        var fileInput = domGlobals.document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
         fileInput.style.position = 'fixed';
         fileInput.style.left = '0';
         fileInput.style.top = '0';
         fileInput.style.opacity = '0.001';
-        document.body.appendChild(fileInput);
+        domGlobals.document.body.appendChild(fileInput);
         var changeHandler = function (e) {
           resolve(Array.prototype.slice.call(e.target.files));
         };
@@ -239,10 +241,57 @@
     var from = function (value) {
       return value === null || value === undefined ? NONE : some(value);
     };
-    var Optional = {
+    var Option = {
       some: some,
       none: none,
       from: from
+    };
+
+    var fromHtml = function (html, scope) {
+      var doc = scope || domGlobals.document;
+      var div = doc.createElement('div');
+      div.innerHTML = html;
+      if (!div.hasChildNodes() || div.childNodes.length > 1) {
+        domGlobals.console.error('HTML does not have a single root node', html);
+        throw new Error('HTML must have a single root node');
+      }
+      return fromDom(div.childNodes[0]);
+    };
+    var fromTag = function (tag, scope) {
+      var doc = scope || domGlobals.document;
+      var node = doc.createElement(tag);
+      return fromDom(node);
+    };
+    var fromText = function (text, scope) {
+      var doc = scope || domGlobals.document;
+      var node = doc.createTextNode(text);
+      return fromDom(node);
+    };
+    var fromDom = function (node) {
+      if (node === null || node === undefined) {
+        throw new Error('Node cannot be null or undefined');
+      }
+      return { dom: constant(node) };
+    };
+    var fromPoint = function (docElm, x, y) {
+      var doc = docElm.dom();
+      return Option.from(doc.elementFromPoint(x, y)).map(fromDom);
+    };
+    var Element = {
+      fromHtml: fromHtml,
+      fromTag: fromTag,
+      fromText: fromText,
+      fromDom: fromDom,
+      fromPoint: fromPoint
+    };
+
+    var Global = typeof domGlobals.window !== 'undefined' ? domGlobals.window : Function('return this;')();
+
+    var ELEMENT = 1;
+
+    var name = function (element) {
+      var r = element.dom().nodeName;
+      return r.toLowerCase();
     };
 
     var typeOf = function (x) {
@@ -280,57 +329,13 @@
     var isFunction = isSimpleType('function');
 
     function ClosestOrAncestor (is, ancestor, scope, a, isRoot) {
-      if (is(scope, a)) {
-        return Optional.some(scope);
-      } else if (isFunction(isRoot) && isRoot(scope)) {
-        return Optional.none();
-      } else {
-        return ancestor(scope, a, isRoot);
-      }
+      return is(scope, a) ? Option.some(scope) : isFunction(isRoot) && isRoot(scope) ? Option.none() : ancestor(scope, a, isRoot);
     }
 
-    var ELEMENT = 1;
-
-    var fromHtml = function (html, scope) {
-      var doc = scope || document;
-      var div = doc.createElement('div');
-      div.innerHTML = html;
-      if (!div.hasChildNodes() || div.childNodes.length > 1) {
-        console.error('HTML does not have a single root node', html);
-        throw new Error('HTML must have a single root node');
-      }
-      return fromDom(div.childNodes[0]);
-    };
-    var fromTag = function (tag, scope) {
-      var doc = scope || document;
-      var node = doc.createElement(tag);
-      return fromDom(node);
-    };
-    var fromText = function (text, scope) {
-      var doc = scope || document;
-      var node = doc.createTextNode(text);
-      return fromDom(node);
-    };
-    var fromDom = function (node) {
-      if (node === null || node === undefined) {
-        throw new Error('Node cannot be null or undefined');
-      }
-      return { dom: node };
-    };
-    var fromPoint = function (docElm, x, y) {
-      return Optional.from(docElm.dom.elementFromPoint(x, y)).map(fromDom);
-    };
-    var SugarElement = {
-      fromHtml: fromHtml,
-      fromTag: fromTag,
-      fromText: fromText,
-      fromDom: fromDom,
-      fromPoint: fromPoint
-    };
-
+    var ELEMENT$1 = ELEMENT;
     var is = function (element, selector) {
-      var dom = element.dom;
-      if (dom.nodeType !== ELEMENT) {
+      var dom = element.dom();
+      if (dom.nodeType !== ELEMENT$1) {
         return false;
       } else {
         var elem = dom;
@@ -348,26 +353,19 @@
       }
     };
 
-    var Global = typeof window !== 'undefined' ? window : Function('return this;')();
-
-    var name = function (element) {
-      var r = element.dom.nodeName;
-      return r.toLowerCase();
-    };
-
     var ancestor = function (scope, predicate, isRoot) {
-      var element = scope.dom;
-      var stop = isFunction(isRoot) ? isRoot : never;
+      var element = scope.dom();
+      var stop = isFunction(isRoot) ? isRoot : constant(false);
       while (element.parentNode) {
         element = element.parentNode;
-        var el = SugarElement.fromDom(element);
+        var el = Element.fromDom(element);
         if (predicate(el)) {
-          return Optional.some(el);
+          return Option.some(el);
         } else if (stop(el)) {
           break;
         }
       }
-      return Optional.none();
+      return Option.none();
     };
     var closest = function (scope, predicate, isRoot) {
       var is = function (s, test) {
@@ -430,14 +428,14 @@
       if (insertToolbarItems.trim().length > 0) {
         editor.ui.registry.addContextToolbar('quickblock', {
           predicate: function (node) {
-            var sugarNode = SugarElement.fromDom(node);
+            var sugarNode = Element.fromDom(node);
             var textBlockElementsMap = editor.schema.getTextBlockElements();
             var isRoot = function (elem) {
-              return elem.dom === editor.getBody();
+              return elem.dom() === editor.getBody();
             };
             return closest$1(sugarNode, 'table', isRoot).fold(function () {
               return closest(sugarNode, function (elem) {
-                return name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom);
+                return name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom());
               }, isRoot).isSome();
             }, function () {
               return false;
@@ -488,4 +486,4 @@
 
     Plugin();
 
-}());
+}(window));

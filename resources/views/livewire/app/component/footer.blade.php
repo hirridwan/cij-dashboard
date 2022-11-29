@@ -1,6 +1,4 @@
-<footer class="footer">
-    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Dashhoard P2P Lending dan Deposito Channeling PT BPR CIPATUJAH JABAR PERSERODA</span>
-        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2022. IT bank CiJ</span>
-    </div>
+<footer class="footer d-flex flex-column flex-md-row align-items-center justify-content-between">
+    <p class="text-muted text-center text-md-left">Dashhoard P2P Lending dan Deposito Channeling PT BPR CIPATUJAH JABAR PERSERODA</p>
+    <p class="text-muted text-center text-md-left mb-0 d-none d-md-block">Copyright © 2022. IT bank CiJ<i class="mb-1 text-primary ml-1 icon-small" data-feather="heart"></i></p>
 </footer>

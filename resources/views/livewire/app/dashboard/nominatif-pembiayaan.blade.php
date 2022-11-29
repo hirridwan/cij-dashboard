@@ -22,14 +22,10 @@
             </div>
             <div class="card card-rounded">
                 <div class="card-body">
-                    <div class="d-sm-flex justify-content-between align-items-start">
-                        <div>
-                            <h4 class="card-title card-title-dash">DETAIL PEMBIAYAAN</h4>
-                            <p class="card-subtitle card-subtitle-dash">Data Detail Pembiayaan</p>
-                        </div>
-                    </div>
+                    <h6 class="card-title">DETAIL PEMBIAYAAN</h6>
+                    <p class="card-description">Data Detail Pembiayaan</p>
                     <div class="table-responsive">
-                        <table class="table table-hover" id="table-pembiayaan">
+                        <table id="dataTableExample" class="table">
                             <thead>
                                 
                             <tr>
@@ -49,7 +45,7 @@
                                 <th>Dokumen</th>
                             </tr>
                             </thead>
-                            {{-- <tbody>
+                            <tbody>
                             @foreach ($data as $item)
                             <tr>
                                 <td>{{$loop->index+1}}</td>
@@ -68,20 +64,11 @@
                                 <td>{{$item->link_dokumen}}</td>
                             </tr>
                             @endforeach
-                            </tbody> --}}
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>            
         </div>
     </div>
-    @push('page_specified_js')
-    <script>
-        $(document).ready( function () {
-            
-            console.log(@this.dataTablesData.data)
-            $('#table-pembiayaan').DataTable();
-        });
-    </script>
-    @endpush
 </div>

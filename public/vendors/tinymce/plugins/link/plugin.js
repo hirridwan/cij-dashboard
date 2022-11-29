@@ -4,9 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.3.2 (2020-06-10)
  */
-(function () {
+(function (domGlobals) {
     'use strict';
 
     var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
@@ -84,6 +84,34 @@
     };
     var getDefaultLinkProtocol = function (editor) {
       return editor.getParam('link_default_protocol', 'http', 'string');
+    };
+
+    var appendClickRemove = function (link, evt) {
+      domGlobals.document.body.appendChild(link);
+      link.dispatchEvent(evt);
+      domGlobals.document.body.removeChild(link);
+    };
+    var open = function (url) {
+      var link = domGlobals.document.createElement('a');
+      link.target = '_blank';
+      link.href = url;
+      link.rel = 'noreferrer noopener';
+      var evt = domGlobals.document.createEvent('MouseEvents');
+      evt.initMouseEvent('click', true, true, domGlobals.window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      appendClickRemove(link, evt);
+    };
+
+    var __assign = function () {
+      __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s)
+            if (Object.prototype.hasOwnProperty.call(s, p))
+              t[p] = s[p];
+        }
+        return t;
+      };
+      return __assign.apply(this, arguments);
     };
 
     var noop = function () {
@@ -196,7 +224,7 @@
     var from = function (value) {
       return value === null || value === undefined ? NONE : some(value);
     };
-    var Optional = {
+    var Option = {
       some: some,
       none: none,
       from: from
@@ -251,102 +279,10 @@
           return r;
         }
       }
-      return Optional.none();
-    };
-
-    var cat = function (arr) {
-      var r = [];
-      var push = function (x) {
-        r.push(x);
-      };
-      for (var i = 0; i < arr.length; i++) {
-        arr[i].each(push);
-      }
-      return r;
-    };
-    var someIf = function (b, a) {
-      return b ? Optional.some(a) : Optional.none();
-    };
-
-    var global$2 = tinymce.util.Tools.resolve('tinymce.util.Tools');
-
-    var getValue = function (item) {
-      return isString(item.value) ? item.value : '';
-    };
-    var getText = function (item) {
-      if (isString(item.text)) {
-        return item.text;
-      } else if (isString(item.title)) {
-        return item.title;
-      } else {
-        return '';
-      }
-    };
-    var sanitizeList = function (list, extractValue) {
-      var out = [];
-      global$2.each(list, function (item) {
-        var text = getText(item);
-        if (item.menu !== undefined) {
-          var items = sanitizeList(item.menu, extractValue);
-          out.push({
-            text: text,
-            items: items
-          });
-        } else {
-          var value = extractValue(item);
-          out.push({
-            text: text,
-            value: value
-          });
-        }
-      });
-      return out;
-    };
-    var sanitizeWith = function (extracter) {
-      if (extracter === void 0) {
-        extracter = getValue;
-      }
-      return function (list) {
-        return Optional.from(list).map(function (list) {
-          return sanitizeList(list, extracter);
-        });
-      };
-    };
-    var sanitize = function (list) {
-      return sanitizeWith(getValue)(list);
-    };
-    var createUi = function (name, label) {
-      return function (items) {
-        return {
-          name: name,
-          type: 'listbox',
-          label: label,
-          items: items
-        };
-      };
-    };
-    var ListOptions = {
-      sanitize: sanitize,
-      sanitizeWith: sanitizeWith,
-      createUi: createUi,
-      getValue: getValue
-    };
-
-    var __assign = function () {
-      __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-          s = arguments[i];
-          for (var p in s)
-            if (Object.prototype.hasOwnProperty.call(s, p))
-              t[p] = s[p];
-        }
-        return t;
-      };
-      return __assign.apply(this, arguments);
+      return Option.none();
     };
 
     var keys = Object.keys;
-    var hasOwnProperty = Object.hasOwnProperty;
     var each$1 = function (obj, f) {
       var props = keys(obj);
       for (var k = 0, len = props.length; k < len; k++) {
@@ -372,37 +308,17 @@
       internalFilter(obj, pred, objAcc(t), noop);
       return t;
     };
-    var has = function (obj, key) {
-      return hasOwnProperty.call(obj, key);
-    };
-    var hasNonNullableKey = function (obj, key) {
-      return has(obj, key) && obj[key] !== undefined && obj[key] !== null;
-    };
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.dom.TreeWalker');
+    var global$2 = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
-    var isAnchor = function (elm) {
-      return elm && elm.nodeName.toLowerCase() === 'a';
-    };
-    var isLink = function (elm) {
-      return isAnchor(elm) && !!getHref(elm);
-    };
-    var collectNodesInRange = function (rng, predicate) {
-      if (rng.collapsed) {
-        return [];
+    var hasRtcPlugin = function (editor) {
+      if (/(^|[ ,])rtc([, ]|$)/.test(editor.settings.plugins) && global.get('rtc')) {
+        return true;
       } else {
-        var contents = rng.cloneContents();
-        var walker = new global$3(contents.firstChild, contents);
-        var elements = [];
-        var current = contents.firstChild;
-        do {
-          if (predicate(current)) {
-            elements.push(current);
-          }
-        } while (current = walker.next());
-        return elements;
+        return false;
       }
     };
+
     var hasProtocol = function (url) {
       return /^\w+:/i.test(url);
     };
@@ -443,19 +359,17 @@
       var text = anchorElm ? anchorElm.innerText || anchorElm.textContent : selection.getContent({ format: 'text' });
       return trimCaretContainers(text);
     };
+    var isLink = function (elm) {
+      return elm && elm.nodeName === 'A' && !!getHref(elm);
+    };
     var hasLinks = function (elements) {
       return global$2.grep(elements, isLink).length > 0;
     };
-    var hasLinksInSelection = function (rng) {
-      return collectNodesInRange(rng, isLink).length > 0;
-    };
-    var isOnlyTextSelected = function (editor) {
-      var inlineTextElements = editor.schema.getTextInlineElements();
-      var isElement = function (elm) {
-        return elm.nodeType === 1 && !isAnchor(elm) && !has(inlineTextElements, elm.nodeName.toLowerCase());
-      };
-      var elements = collectNodesInRange(editor.selection.getRng(), isElement);
-      return elements.length === 0;
+    var isOnlyTextSelected = function (html) {
+      if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
+        return false;
+      }
+      return true;
     };
     var isImageFigure = function (elm) {
       return elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
@@ -485,7 +399,7 @@
         var newRel = applyRelTargetRules(newLinkAttrs.rel, newLinkAttrs.target === '_blank');
         newLinkAttrs.rel = newRel ? newRel : null;
       }
-      if (Optional.from(newLinkAttrs.target).isNone() && getTargetList(editor) === false) {
+      if (Option.from(newLinkAttrs.target).isNone() && getTargetList(editor) === false) {
         newLinkAttrs.target = getDefaultLinkTarget(editor);
       }
       newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, assumeExternalTargets(editor));
@@ -529,29 +443,16 @@
         }
       });
     };
-    var unlinkSelection = function (editor) {
-      var dom = editor.dom, selection = editor.selection;
-      var bookmark = selection.getBookmark();
-      var rng = selection.getRng().cloneRange();
-      var startAnchorElm = dom.getParent(rng.startContainer, 'a[href]', editor.getBody());
-      var endAnchorElm = dom.getParent(rng.endContainer, 'a[href]', editor.getBody());
-      if (startAnchorElm) {
-        rng.setStartBefore(startAnchorElm);
-      }
-      if (endAnchorElm) {
-        rng.setEndAfter(endAnchorElm);
-      }
-      selection.setRng(rng);
-      editor.execCommand('unlink');
-      selection.moveToBookmark(bookmark);
-    };
     var unlinkDomMutation = function (editor) {
       editor.undoManager.transact(function () {
         var node = editor.selection.getNode();
         if (isImageFigure(node)) {
           unlinkImageFigure(editor, node);
         } else {
-          unlinkSelection(editor);
+          var anchorElm = editor.dom.getParent(node, 'a[href]', editor.getBody());
+          if (anchorElm) {
+            editor.dom.remove(anchorElm, true);
+          }
         }
         editor.focus();
       });
@@ -570,10 +471,10 @@
       });
     };
     var link = function (editor, attachState, data) {
-      editor.hasPlugin('rtc', true) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
+      hasRtcPlugin(editor) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
     };
     var unlink = function (editor) {
-      editor.hasPlugin('rtc', true) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
+      hasRtcPlugin(editor) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
     };
     var unlinkImageFigure = function (editor, fig) {
       var img = editor.dom.select('img', fig)[0];
@@ -594,16 +495,83 @@
       }
     };
 
-    var isListGroup = function (item) {
-      return hasNonNullableKey(item, 'items');
+    var cat = function (arr) {
+      var r = [];
+      var push = function (x) {
+        r.push(x);
+      };
+      for (var i = 0; i < arr.length; i++) {
+        arr[i].each(push);
+      }
+      return r;
     };
+
+    var getValue = function (item) {
+      return isString(item.value) ? item.value : '';
+    };
+    var sanitizeList = function (list, extractValue) {
+      var out = [];
+      global$2.each(list, function (item) {
+        var text = isString(item.text) ? item.text : isString(item.title) ? item.title : '';
+        if (item.menu !== undefined) ; else {
+          var value = extractValue(item);
+          out.push({
+            text: text,
+            value: value
+          });
+        }
+      });
+      return out;
+    };
+    var sanitizeWith = function (extracter) {
+      if (extracter === void 0) {
+        extracter = getValue;
+      }
+      return function (list) {
+        return Option.from(list).map(function (list) {
+          return sanitizeList(list, extracter);
+        });
+      };
+    };
+    var sanitize = function (list) {
+      return sanitizeWith(getValue)(list);
+    };
+    var createUi = function (name, label) {
+      return function (items) {
+        return {
+          name: name,
+          type: 'selectbox',
+          label: label,
+          items: items
+        };
+      };
+    };
+    var ListOptions = {
+      sanitize: sanitize,
+      sanitizeWith: sanitizeWith,
+      createUi: createUi,
+      getValue: getValue
+    };
+
+    var Cell = function (initial) {
+      var value = initial;
+      var get = function () {
+        return value;
+      };
+      var set = function (v) {
+        value = v;
+      };
+      return {
+        get: get,
+        set: set
+      };
+    };
+
     var findTextByValue = function (value, catalog) {
       return findMap(catalog, function (item) {
-        if (isListGroup(item)) {
-          return findTextByValue(value, item.items);
-        } else {
-          return someIf(item.value === value, item);
-        }
+        return Option.some(item).filter(function (i) {
+          return i.value === value;
+        });
       });
     };
     var getDelta = function (persistentText, fieldName, catalog, data) {
@@ -620,59 +588,48 @@
           },
           text: hasPersistentText ? persistentText : i.text
         };
-      }) : Optional.none();
+      }) : Option.none();
     };
-    var findCatalog = function (catalogs, fieldName) {
+    var findCatalog = function (settings, fieldName) {
       if (fieldName === 'link') {
-        return catalogs.link;
+        return settings.catalogs.link;
       } else if (fieldName === 'anchor') {
-        return catalogs.anchor;
+        return settings.catalogs.anchor;
       } else {
-        return Optional.none();
+        return Option.none();
       }
     };
-    var init = function (initialData, linkCatalog) {
-      var persistentData = {
-        text: initialData.text,
-        title: initialData.title
-      };
-      var getTitleFromUrlChange = function (url) {
-        return someIf(persistentData.title.length <= 0, Optional.from(url.meta.title).getOr(''));
-      };
-      var getTextFromUrlChange = function (url) {
-        return someIf(persistentData.text.length <= 0, Optional.from(url.meta.text).getOr(url.value));
-      };
+    var init = function (initialData, linkSettings) {
+      var persistentText = Cell(initialData.text);
       var onUrlChange = function (data) {
-        var text = getTextFromUrlChange(data.url);
-        var title = getTitleFromUrlChange(data.url);
-        if (text.isSome() || title.isSome()) {
-          return Optional.some(__assign(__assign({}, text.map(function (text) {
-            return { text: text };
-          }).getOr({})), title.map(function (title) {
-            return { title: title };
-          }).getOr({})));
+        if (persistentText.get().length <= 0) {
+          var urlText = data.url.meta.text !== undefined ? data.url.meta.text : data.url.value;
+          var urlTitle = data.url.meta.title !== undefined ? data.url.meta.title : '';
+          return Option.some({
+            text: urlText,
+            title: urlTitle
+          });
         } else {
-          return Optional.none();
+          return Option.none();
         }
       };
       var onCatalogChange = function (data, change) {
-        var catalog = findCatalog(linkCatalog, change.name).getOr([]);
-        return getDelta(persistentData.text, change.name, catalog, data);
+        var catalog = findCatalog(linkSettings, change.name).getOr([]);
+        return getDelta(persistentText.get(), change.name, catalog, data);
       };
       var onChange = function (getData, change) {
-        var name = change.name;
-        if (name === 'url') {
+        if (change.name === 'url') {
           return onUrlChange(getData());
         } else if (contains([
             'anchor',
             'link'
-          ], name)) {
+          ], change.name)) {
           return onCatalogChange(getData(), change);
-        } else if (name === 'text' || name === 'title') {
-          persistentData[name] = getData()[name];
-          return Optional.none();
+        } else if (change.name === 'text') {
+          persistentText.set(getData().text);
+          return Option.none();
         } else {
-          return Optional.none();
+          return Option.none();
         }
       };
       return { onChange: onChange };
@@ -682,13 +639,13 @@
       getDelta: getDelta
     };
 
-    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Delay');
+    var global$3 = tinymce.util.Tools.resolve('tinymce.util.Delay');
 
-    var global$5 = tinymce.util.Tools.resolve('tinymce.util.Promise');
+    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Promise');
 
     var delayedConfirm = function (editor, message, callback) {
       var rng = editor.selection.getRng();
-      global$4.setEditorTimeout(editor, function () {
+      global$3.setEditorTimeout(editor, function () {
         editor.windowManager.confirm(message, function (state) {
           editor.selection.setRng(rng);
           callback(state);
@@ -697,24 +654,24 @@
     };
     var tryEmailTransform = function (data) {
       var url = data.href;
-      var suggestMailTo = url.indexOf('@') > 0 && url.indexOf('/') === -1 && url.indexOf('mailto:') === -1;
-      return suggestMailTo ? Optional.some({
+      var suggestMailTo = url.indexOf('@') > 0 && url.indexOf('//') === -1 && url.indexOf('mailto:') === -1;
+      return suggestMailTo ? Option.some({
         message: 'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?',
         preprocess: function (oldData) {
           return __assign(__assign({}, oldData), { href: 'mailto:' + url });
         }
-      }) : Optional.none();
+      }) : Option.none();
     };
     var tryProtocolTransform = function (assumeExternalTargets, defaultLinkProtocol) {
       return function (data) {
         var url = data.href;
-        var suggestProtocol = assumeExternalTargets === 1 && !hasProtocol(url) || assumeExternalTargets === 0 && /^\s*www(\.|\d\.)/i.test(url);
-        return suggestProtocol ? Optional.some({
+        var suggestProtocol = assumeExternalTargets === 1 && !hasProtocol(url) || assumeExternalTargets === 0 && /^\s*www[\.|\d\.]/i.test(url);
+        return suggestProtocol ? Option.some({
           message: 'The URL you entered seems to be an external link. Do you want to add the required ' + defaultLinkProtocol + ':// prefix?',
           preprocess: function (oldData) {
             return __assign(__assign({}, oldData), { href: defaultLinkProtocol + '://' + url });
           }
-        }) : Optional.none();
+        }) : Option.none();
       };
     };
     var preprocess = function (editor, data) {
@@ -724,9 +681,9 @@
       ], function (f) {
         return f(data);
       }).fold(function () {
-        return global$5.resolve(data);
+        return global$4.resolve(data);
       }, function (transform) {
-        return new global$5(function (callback) {
+        return new global$4(function (callback) {
           delayedConfirm(editor, transform.message, function (state) {
             callback(state ? transform.preprocess(data) : data);
           });
@@ -744,10 +701,10 @@
             value: '#' + id
           }] : [];
       });
-      return anchors.length > 0 ? Optional.some([{
+      return anchors.length > 0 ? Option.some([{
           text: 'None',
           value: ''
-        }].concat(anchors)) : Optional.none();
+        }].concat(anchors)) : Option.none();
     };
     var AnchorListOptions = { getAnchors: getAnchors };
 
@@ -756,17 +713,17 @@
       if (list.length > 0) {
         return ListOptions.sanitize(list);
       }
-      return Optional.none();
+      return Option.none();
     };
     var ClassListOptions = { getClasses: getClasses };
 
-    var global$6 = tinymce.util.Tools.resolve('tinymce.util.XHR');
+    var global$5 = tinymce.util.Tools.resolve('tinymce.util.XHR');
 
     var parseJson = function (text) {
       try {
-        return Optional.some(JSON.parse(text));
+        return Option.some(JSON.parse(text));
       } catch (err) {
-        return Optional.none();
+        return Option.none();
       }
     };
     var getLinks = function (editor) {
@@ -774,32 +731,31 @@
         return editor.convertURL(item.value || item.url, 'href');
       };
       var linkList = getLinkList(editor);
-      return new global$5(function (callback) {
+      return new global$4(function (callback) {
         if (isString(linkList)) {
-          global$6.send({
+          global$5.send({
             url: linkList,
             success: function (text) {
               return callback(parseJson(text));
             },
             error: function (_) {
-              return callback(Optional.none());
+              return callback(Option.none());
             }
           });
         } else if (isFunction(linkList)) {
           linkList(function (output) {
-            return callback(Optional.some(output));
+            return callback(Option.some(output));
           });
         } else {
-          callback(Optional.from(linkList));
+          callback(Option.from(linkList));
         }
       }).then(function (optItems) {
         return optItems.bind(ListOptions.sanitizeWith(extractor)).map(function (items) {
           if (items.length > 0) {
-            var noneItem = [{
+            return [{
                 text: 'None',
                 value: ''
-              }];
-            return noneItem.concat(items);
+              }].concat(items);
           } else {
             return items;
           }
@@ -819,7 +775,7 @@
         var sanitizer = enforceSafe ? ListOptions.sanitizeWith(safeRelExtractor) : ListOptions.sanitize;
         return sanitizer(list);
       }
-      return Optional.none();
+      return Option.none();
     };
     var RelOptions = { getRels: getRels };
 
@@ -837,25 +793,25 @@
       var list = getTargetList(editor);
       if (isArray(list)) {
         return ListOptions.sanitize(list).orThunk(function () {
-          return Optional.some(fallbacks);
+          return Option.some(fallbacks);
         });
       } else if (list === false) {
-        return Optional.none();
+        return Option.none();
       }
-      return Optional.some(fallbacks);
+      return Option.some(fallbacks);
     };
     var TargetOptions = { getTargets: getTargets };
 
     var nonEmptyAttr = function (dom, elem, name) {
       var val = dom.getAttrib(elem, name);
-      return val !== null && val.length > 0 ? Optional.some(val) : Optional.none();
+      return val !== null && val.length > 0 ? Option.some(val) : Option.none();
     };
     var extractFromAnchor = function (editor, anchor) {
       var dom = editor.dom;
-      var onlyText = isOnlyTextSelected(editor);
-      var text = onlyText ? Optional.some(getAnchorText(editor.selection, anchor)) : Optional.none();
-      var url = anchor ? Optional.some(dom.getAttrib(anchor, 'href')) : Optional.none();
-      var target = anchor ? Optional.from(dom.getAttrib(anchor, 'target')) : Optional.none();
+      var onlyText = isOnlyTextSelected(editor.selection.getContent());
+      var text = onlyText ? Option.some(getAnchorText(editor.selection, anchor)) : Option.none();
+      var url = anchor ? Option.some(dom.getAttrib(anchor, 'href')) : Option.none();
+      var target = anchor ? Option.from(dom.getAttrib(anchor, 'target')) : Option.none();
       var rel = nonEmptyAttr(dom, anchor, 'rel');
       var linkClass = nonEmptyAttr(dom, anchor, 'class');
       var title = nonEmptyAttr(dom, anchor, 'title');
@@ -880,7 +836,7 @@
             anchor: AnchorListOptions.getAnchors(editor),
             link: links
           },
-          optNode: Optional.from(linkNode),
+          optNode: Option.from(linkNode),
           flags: { titleEnabled: shouldShowLinkTitle(editor) }
         };
       });
@@ -896,7 +852,7 @@
           return;
         }
         var getChangedValue = function (key) {
-          return Optional.from(data[key]).filter(function (value) {
+          return Option.from(data[key]).filter(function (value) {
             return !info.anchor[key].is(value);
           });
         };
@@ -924,20 +880,27 @@
       return DialogInfo.collect(editor, anchorNode);
     };
     var getInitialData = function (info, defaultTarget) {
-      var anchor = info.anchor;
-      var url = anchor.url.getOr('');
       return {
         url: {
-          value: url,
-          meta: { original: { value: url } }
+          value: info.anchor.url.getOr(''),
+          meta: {
+            attach: function () {
+            },
+            text: info.anchor.url.fold(function () {
+              return '';
+            }, function () {
+              return info.anchor.text.getOr('');
+            }),
+            original: { value: info.anchor.url.getOr('') }
+          }
         },
-        text: anchor.text.getOr(''),
-        title: anchor.title.getOr(''),
-        anchor: url,
-        link: url,
-        rel: anchor.rel.getOr(''),
-        target: anchor.target.or(defaultTarget).getOr(''),
-        linkClass: anchor.linkClass.getOr('')
+        text: info.anchor.text.getOr(''),
+        title: info.anchor.title.getOr(''),
+        anchor: info.anchor.url.getOr(''),
+        link: info.anchor.url.getOr(''),
+        rel: info.anchor.rel.getOr(''),
+        target: info.anchor.target.or(defaultTarget).getOr(''),
+        linkClass: info.anchor.linkClass.getOr('')
       };
     };
     var makeDialog = function (settings, onSubmit, editor) {
@@ -959,10 +922,10 @@
           type: 'input',
           label: 'Title'
         }] : [];
-      var defaultTarget = Optional.from(getDefaultLinkTarget(editor));
+      var defaultTarget = Option.from(getDefaultLinkTarget(editor));
       var initialData = getInitialData(settings, defaultTarget);
+      var dialogDelta = DialogChanges.init(initialData, settings);
       var catalogs = settings.catalogs;
-      var dialogDelta = DialogChanges.init(initialData, catalogs);
       var body = {
         type: 'panel',
         items: flatten([
@@ -1005,7 +968,7 @@
         onSubmit: onSubmit
       };
     };
-    var open = function (editor) {
+    var open$1 = function (editor) {
       var data = collectData(editor);
       data.then(function (info) {
         var onSubmit = handleSubmit(editor, info);
@@ -1013,21 +976,6 @@
       }).then(function (spec) {
         editor.windowManager.open(spec);
       });
-    };
-
-    var appendClickRemove = function (link, evt) {
-      document.body.appendChild(link);
-      link.dispatchEvent(evt);
-      document.body.removeChild(link);
-    };
-    var open$1 = function (url) {
-      var link = document.createElement('a');
-      link.target = '_blank';
-      link.href = url;
-      link.rel = 'noreferrer noopener';
-      var evt = document.createEvent('MouseEvents');
-      evt.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-      appendClickRemove(link, evt);
     };
 
     var getLink = function (editor, elm) {
@@ -1048,13 +996,13 @@
             editor.selection.scrollIntoView(targetEl[0], true);
           }
         } else {
-          open$1(a.href);
+          open(a.href);
         }
       }
     };
     var openDialog = function (editor) {
       return function () {
-        open(editor);
+        open$1(editor);
       };
     };
     var gotoSelectedLink = function (editor) {
@@ -1078,38 +1026,28 @@
         }
       });
     };
-    var toggleState = function (editor, toggler) {
-      editor.on('NodeChange', toggler);
-      return function () {
-        return editor.off('NodeChange', toggler);
-      };
-    };
     var toggleActiveState = function (editor) {
       return function (api) {
-        return toggleState(editor, function () {
-          api.setActive(!editor.mode.isReadOnly() && getAnchorElement(editor, editor.selection.getNode()) !== null);
-        });
+        var nodeChangeHandler = function (e) {
+          return api.setActive(!editor.mode.isReadOnly() && !!getAnchorElement(editor, e.element));
+        };
+        editor.on('NodeChange', nodeChangeHandler);
+        return function () {
+          return editor.off('NodeChange', nodeChangeHandler);
+        };
       };
     };
     var toggleEnabledState = function (editor) {
       return function (api) {
-        var updateState = function () {
-          return api.setDisabled(getAnchorElement(editor, editor.selection.getNode()) === null);
-        };
-        updateState();
-        return toggleState(editor, updateState);
-      };
-    };
-    var toggleUnlinkState = function (editor) {
-      return function (api) {
-        var hasLinks$1 = function (parents) {
-          return hasLinks(parents) || hasLinksInSelection(editor.selection.getRng());
-        };
         var parents = editor.dom.getParents(editor.selection.getStart());
-        api.setDisabled(!hasLinks$1(parents));
-        return toggleState(editor, function (e) {
-          return api.setDisabled(!hasLinks$1(e.parents));
-        });
+        api.setDisabled(!hasLinks(parents));
+        var nodeChangeHandler = function (e) {
+          return api.setDisabled(!hasLinks(e.parents));
+        };
+        editor.on('NodeChange', nodeChangeHandler);
+        return function () {
+          return editor.off('NodeChange', nodeChangeHandler);
+        };
       };
     };
 
@@ -1148,7 +1086,7 @@
         onAction: function () {
           return unlink(editor);
         },
-        onSetup: toggleUnlinkState(editor)
+        onSetup: toggleEnabledState(editor)
       });
     };
     var setupMenuItems = function (editor) {
@@ -1170,7 +1108,7 @@
         onAction: function () {
           return unlink(editor);
         },
-        onSetup: toggleUnlinkState(editor)
+        onSetup: toggleEnabledState(editor)
       });
     };
     var setupContextMenu = function (editor) {
@@ -1227,25 +1165,23 @@
                   attach: function () {
                   }
                 };
-                var onlyText = isOnlyTextSelected(editor);
-                var text = onlyText ? Optional.some(getAnchorText(editor.selection, anchor)).filter(function (t) {
+                var onlyText = isOnlyTextSelected(editor.selection.getContent());
+                var text = onlyText ? Option.some(getAnchorText(editor.selection, anchor)).filter(function (t) {
                   return t.length > 0;
-                }).or(Optional.from(value)) : Optional.none();
+                }).or(Option.from(value)) : Option.none();
                 link(editor, attachState, {
                   href: value,
                   text: text,
-                  title: Optional.none(),
-                  rel: Optional.none(),
-                  target: Optional.none(),
-                  class: Optional.none()
+                  title: Option.none(),
+                  rel: Option.none(),
+                  target: Option.none(),
+                  class: Option.none()
                 });
                 formApi.hide();
               } else {
-                editor.undoManager.transact(function () {
-                  editor.dom.setAttrib(anchor, 'href', value);
-                  collapseSelectionToEnd(editor);
-                  formApi.hide();
-                });
+                editor.dom.setAttrib(anchor, 'href', value);
+                collapseSelectionToEnd(editor);
+                formApi.hide();
               }
             }
           },
@@ -1287,4 +1223,4 @@
 
     Plugin();
 
-}());
+}(window));

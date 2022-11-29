@@ -1,7 +1,7 @@
-(function($) {
+$(function() {
   'use strict';
   $(function() {
-    $('.file-upload-browse').on('click', function() {
+    $('.file-upload-browse').on('click', function(e) {
       var file = $(this).parent().parent().parent().find('.file-upload-default');
       file.trigger('click');
     });
@@ -9,4 +9,4 @@
       $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
     });
   });
-})(jQuery);
+});

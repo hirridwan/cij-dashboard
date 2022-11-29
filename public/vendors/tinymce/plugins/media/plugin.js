@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.3.2 (2020-06-10)
  */
 (function () {
     'use strict';
@@ -134,7 +134,7 @@
     var from = function (value) {
       return value === null || value === undefined ? NONE : some(value);
     };
-    var Optional = {
+    var Option = {
       some: some,
       none: none,
       from: from
@@ -204,7 +204,7 @@
       }
     };
     var get = function (obj, key) {
-      return has(obj, key) ? Optional.from(obj[key]) : Optional.none();
+      return has(obj, key) ? Option.from(obj[key]) : Option.none();
     };
     var has = function (obj, key) {
       return hasOwnProperty.call(obj, key);
@@ -461,7 +461,7 @@
                 if (data[sources[index]]) {
                   var attrs = [];
                   attrs.map = {};
-                  if (sourceCount <= index) {
+                  if (sourceCount < index) {
                     setAttributes(attrs, {
                       src: data[sources[index]],
                       type: data[sources[index] + 'mime']
@@ -731,20 +731,20 @@
         };
         var getNonEmptyValue = function (c) {
           return get(c, 'value').bind(function (v) {
-            return v.length > 0 ? Optional.some(v) : Optional.none();
+            return v.length > 0 ? Option.some(v) : Option.none();
           });
         };
         var getFromValueFirst = function () {
           return getFromData().bind(function (child) {
             return isObject(child) ? getNonEmptyValue(child).orThunk(getFromMetaData) : getFromMetaData().orThunk(function () {
-              return Optional.from(child);
+              return Option.from(child);
             });
           });
         };
         var getFromMetaFirst = function () {
           return getFromMetaData().orThunk(function () {
             return getFromData().bind(function (child) {
-              return isObject(child) ? getNonEmptyValue(child) : Optional.from(child);
+              return isObject(child) ? getNonEmptyValue(child) : Option.from(child);
             });
           });
         };
@@ -1043,8 +1043,9 @@
     };
 
     var createPlaceholderNode = function (editor, node) {
+      var placeHolder;
       var name = node.name;
-      var placeHolder = new global$7('img', 1);
+      placeHolder = new global$7('img', 1);
       placeHolder.shortEnded = true;
       retainAttributesAndInnerHtml(editor, node, placeHolder);
       placeHolder.attr({
@@ -1058,8 +1059,11 @@
       return placeHolder;
     };
     var createPreviewIframeNode = function (editor, node) {
+      var previewWrapper;
+      var previewNode;
+      var shimNode;
       var name = node.name;
-      var previewWrapper = new global$7('span', 1);
+      previewWrapper = new global$7('span', 1);
       previewWrapper.attr({
         'contentEditable': 'false',
         'style': node.attr('style'),
@@ -1067,7 +1071,7 @@
         'class': 'mce-preview-object mce-object-' + name
       });
       retainAttributesAndInnerHtml(editor, node, previewWrapper);
-      var previewNode = new global$7(name, 1);
+      previewNode = new global$7(name, 1);
       previewNode.attr({
         src: node.attr('src'),
         allowfullscreen: node.attr('allowfullscreen'),
@@ -1077,7 +1081,7 @@
         height: node.attr('height'),
         frameborder: '0'
       });
-      var shimNode = new global$7('span', 1);
+      shimNode = new global$7('span', 1);
       shimNode.attr('class', 'mce-shim');
       previewWrapper.append(previewNode);
       previewWrapper.append(shimNode);
@@ -1086,8 +1090,10 @@
     var retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
       var attrName;
       var attrValue;
+      var attribs;
       var ai;
-      var attribs = sourceNode.attributes;
+      var innerHtml;
+      attribs = sourceNode.attributes;
       ai = attribs.length;
       while (ai--) {
         attrName = attribs[ai].name;
@@ -1099,7 +1105,7 @@
           targetNode.attr('data-mce-p-' + attrName, attrValue);
         }
       }
-      var innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
+      innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
       if (innerHtml) {
         targetNode.attr('data-mce-html', escape(sanitize(editor, innerHtml)));
         targetNode.firstChild = null;

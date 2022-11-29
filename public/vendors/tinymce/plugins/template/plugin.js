@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.3.2 (2020-06-10)
  */
 (function () {
     'use strict';
@@ -51,35 +51,17 @@
     var getPreviewReplaceValues = function (editor) {
       return editor.getParam('template_preview_replace_values');
     };
-    var getContentStyle = function (editor) {
-      return editor.getParam('content_style', '', 'string');
-    };
-    var shouldUseContentCssCors = function (editor) {
-      return editor.getParam('content_css_cors', false, 'boolean');
-    };
     var getTemplateReplaceValues = function (editor) {
       return editor.getParam('template_replace_values');
     };
-    var getTemplates = function (editor) {
-      return editor.getParam('templates');
+    var getTemplates = function (editorSettings) {
+      return editorSettings.templates;
     };
     var getCdateFormat = function (editor) {
       return editor.getParam('template_cdate_format', editor.translate('%Y-%m-%d'));
     };
     var getMdateFormat = function (editor) {
       return editor.getParam('template_mdate_format', editor.translate('%Y-%m-%d'));
-    };
-    var getBodyClassFromHash = function (editor) {
-      var bodyClass = editor.getParam('body_class', '', 'hash');
-      return bodyClass[editor.id] || '';
-    };
-    var getBodyClass = function (editor) {
-      var bodyClass = editor.getParam('body_class', '', 'string');
-      if (bodyClass.indexOf('=') === -1) {
-        return bodyClass;
-      } else {
-        return getBodyClassFromHash(editor);
-      }
     };
 
     var addZeros = function (value, len) {
@@ -116,9 +98,9 @@
       return fmt;
     };
 
-    var createTemplateList = function (editor, callback) {
+    var createTemplateList = function (editorSettings, callback) {
       return function () {
-        var templateList = getTemplates(editor);
+        var templateList = getTemplates(editorSettings);
         if (typeof templateList === 'function') {
           templateList(callback);
           return;
@@ -159,13 +141,14 @@
     var hasClass = function (n, c) {
       return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
     };
-    var insertTemplate = function (editor, _ui, html) {
+    var insertTemplate = function (editor, ui, html) {
       var el;
+      var n;
       var dom = editor.dom;
       var sel = editor.selection.getContent();
       html = replaceTemplateValues(html, getTemplateReplaceValues(editor));
       el = dom.create('div', null, html);
-      var n = dom.select('.mceTmpl', el);
+      n = dom.select('.mceTmpl', el);
       if (n && n.length > 0) {
         el = dom.create('div', null);
         el.appendChild(n[0].cloneNode(true));
@@ -196,7 +179,7 @@
         global$1.each(dom.select('div', o.node), function (e) {
           if (dom.hasClass(e, 'mceTmpl')) {
             global$1.each(dom.select('*', e), function (e) {
-              if (dom.hasClass(e, getModificationDateClasses(editor).replace(/\s+/g, '|'))) {
+              if (dom.hasClass(e, editor.getParam('template_mdate_classes', 'mdate').replace(/\s+/g, '|'))) {
                 e.innerHTML = getDateTime(editor, dateFormat);
               }
             });
@@ -306,7 +289,7 @@
     var from = function (value) {
       return value === null || value === undefined ? NONE : some(value);
     };
-    var Optional = {
+    var Option = {
       some: some,
       none: none,
       from: from
@@ -325,24 +308,22 @@
       for (var i = 0, len = xs.length; i < len; i++) {
         var x = xs[i];
         if (pred(x, i)) {
-          return Optional.some(x);
+          return Option.some(x);
         } else if (until(x, i)) {
           break;
         }
       }
-      return Optional.none();
+      return Option.none();
     };
     var find = function (xs, pred) {
       return findUntil(xs, pred, never);
     };
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.Env');
-
-    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Promise');
+    var global$3 = tinymce.util.Tools.resolve('tinymce.util.Promise');
 
     var hasOwnProperty = Object.hasOwnProperty;
     var get = function (obj, key) {
-      return has(obj, key) ? Optional.from(obj[key]) : Optional.none();
+      return has(obj, key) ? Option.from(obj[key]) : Option.none();
     };
     var has = function (obj, key) {
       return hasOwnProperty.call(obj, key);
@@ -363,22 +344,19 @@
 
     var getPreviewContent = function (editor, html) {
       if (html.indexOf('<html>') === -1) {
-        var contentCssEntries_1 = '';
-        var contentStyle = getContentStyle(editor);
-        if (contentStyle) {
-          contentCssEntries_1 += '<style type="text/css">' + contentStyle + '</style>';
-        }
-        var cors_1 = shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+        var contentCssLinks_1 = '';
         global$1.each(editor.contentCSS, function (url) {
-          contentCssEntries_1 += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '"' + cors_1 + '>';
+          contentCssLinks_1 += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
         });
-        var bodyClass = getBodyClass(editor);
+        var bodyClass = editor.settings.body_class || '';
+        if (bodyClass.indexOf('=') !== -1) {
+          bodyClass = editor.getParam('body_class', '', 'hash');
+          bodyClass = bodyClass[editor.id] || '';
+        }
         var encode = editor.dom.encode;
-        var isMetaKeyPressed = global$3.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
-        var preventClicksOnLinksScript = '<script>' + 'document.addEventListener && document.addEventListener("click", function(e) {' + 'for (var elm = e.target; elm; elm = elm.parentNode) {' + 'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' + 'e.preventDefault();' + '}' + '}' + '}, false);' + '</script> ';
         var directionality = editor.getBody().dir;
         var dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
-        html = '<!DOCTYPE html>' + '<html>' + '<head>' + '<base href="' + encode(editor.documentBaseURI.getURI()) + '">' + contentCssEntries_1 + preventClicksOnLinksScript + '</head>' + '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' + html + '</body>' + '</html>';
+        html = '<!DOCTYPE html>' + '<html>' + '<head>' + contentCssLinks_1 + '</head>' + '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' + html + '</body>' + '</html>';
       }
       return replaceTemplateValues(html, getPreviewReplaceValues(editor));
     };
@@ -390,9 +368,9 @@
             text: message,
             type: 'info'
           });
-          return Optional.none();
+          return Option.none();
         }
-        return Optional.from(global$1.map(templateList, function (template, index) {
+        return Option.from(global$1.map(templateList, function (template, index) {
           var isUrlTemplate = function (t) {
             return t.url !== undefined;
           };
@@ -400,8 +378,8 @@
             selected: index === 0,
             text: template.title,
             value: {
-              url: isUrlTemplate(template) ? Optional.from(template.url) : Optional.none(),
-              content: !isUrlTemplate(template) ? Optional.from(template.content) : Optional.none(),
+              url: isUrlTemplate(template) ? Option.from(template.url) : Option.none(),
+              content: !isUrlTemplate(template) ? Option.from(template.content) : Option.none(),
               description: template.description
             }
           };
@@ -426,7 +404,7 @@
         });
       };
       var getTemplateContent = function (t) {
-        return new global$4(function (resolve, reject) {
+        return new global$3(function (resolve, reject) {
           t.value.url.fold(function () {
             return resolve(t.value.content.getOr(''));
           }, function (url) {
@@ -555,12 +533,12 @@
       editor.ui.registry.addButton('template', {
         icon: 'template',
         tooltip: 'Insert template',
-        onAction: createTemplateList(editor, showDialog(editor))
+        onAction: createTemplateList(editor.settings, showDialog(editor))
       });
       editor.ui.registry.addMenuItem('template', {
         icon: 'template',
         text: 'Insert template...',
-        onAction: createTemplateList(editor, showDialog(editor))
+        onAction: createTemplateList(editor.settings, showDialog(editor))
       });
     };
 

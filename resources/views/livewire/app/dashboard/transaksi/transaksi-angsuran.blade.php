@@ -13,7 +13,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Nama Fintech</label>
-                                    <select class="form-control select2" style="padding: 0px;!important;">
+                                    <select class="js-example-basic-single w-100">
                                         <option>-- Nama Fintech --</option>
                                         @forelse ($finteches as $item)
                                             <option value="{{$item->id}}">{{$item->name}}</option>
@@ -47,7 +47,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Kode Transaksi</label>
-                                    <select class="form-control select2">
+                                    <select class="js-example-basic-single w-100">
                                         <option value="">-- Pilih Kode Trx --</option>
                                         @forelse ($kode_transaksi as $item)
                                             <option value="{{$item->kode}}">{{$item->nama}}</option>
@@ -102,11 +102,4 @@
             </div>
         </div>
     </div>
-    @push('page_specified_js')
-        <script>
-            $(document).ready(function() {
-                $('.select2').select2();
-            });
-        </script>
-    @endpush
 </div>

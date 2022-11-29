@@ -4,9 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.3.2 (2020-06-10)
  */
-(function () {
+(function (domGlobals) {
     'use strict';
 
     var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
@@ -38,12 +38,12 @@
     };
     var setup = function (editor) {
       function tabHandler(e) {
-        var x, i;
+        var x, el, v, i;
         if (e.keyCode !== global$6.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
           return;
         }
         function find(direction) {
-          var el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
+          el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
           function canSelectRecursive(e) {
             return e.nodeName === 'BODY' || e.type !== 'hidden' && e.style.display !== 'none' && e.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode);
           }
@@ -71,12 +71,11 @@
           }
           return null;
         }
-        var v = global$5.explode(getTabFocus(editor));
+        v = global$5.explode(getTabFocus(editor));
         if (v.length === 1) {
           v[1] = v[0];
           v[0] = ':prev';
         }
-        var el;
         if (e.shiftKey) {
           if (v[0] === ':prev') {
             el = find(-1);
@@ -97,7 +96,7 @@
           } else {
             global$4.setTimeout(function () {
               if (!global$3.webkit) {
-                window.focus();
+                domGlobals.window.focus();
               }
               el.focus();
             }, 10);
@@ -126,4 +125,4 @@
 
     Plugin();
 
-}());
+}(window));
